@@ -172,25 +172,7 @@ cd miniERPModule
 
 Replace `<https://github.com/gentaananda48/mini-erp-module>` with the actual Git repository URL.
 
-### 2. Check the project files
-
-Before starting, make sure the repository contains:
-
-```text
-docker-compose.yml
-backend/DockerFile
-backend/migrations/
-backend/seeds/
-frontend/Dockerfile
-frontend/nginx.conf
-frontend/package.json
-frontend/package-lock.json
-```
-
-The Compose configuration expects the backend Dockerfile to be named
-`DockerFile` with the same capitalization.
-
-### 3. Build and start the application
+### 2. Build and start the application
 
 Run this command from the project root:
 
@@ -257,66 +239,6 @@ Nginx proxies those requests to the backend container.
 
 The backend port is published on the host for direct API testing with
 tools such as curl or Postman.
-
-## Useful Docker Commands
-
-### Start existing containers
-
-```bash
-docker compose up -d
-```
-
-### Rebuild after changing application code or Docker configuration
-
-```bash
-docker compose up --build -d
-```
-
-### Follow all service logs
-
-```bash
-docker compose logs -f
-```
-
-### Follow logs for one service
-
-```bash
-docker compose logs -f frontend
-docker compose logs -f backend
-```
-
-### Stop and remove containers and network
-
-```bash
-docker compose down
-```
-
-This command does **not** delete the named PostgreSQL volume. Database
-data normally remains available when the stack is started again.
-
-### Stop the stack and delete the database volume
-
-```bash
-docker compose down -v
-```
-
-**Warning:** `-v` deletes the PostgreSQL data volume. All data stored in
-that volume will be lost. Use this only when you intentionally want to
-reset the local database.
-
-### Rebuild only the frontend
-
-```bash
-docker compose build frontend
-docker compose up -d frontend
-```
-
-### Rebuild only the backend
-
-```bash
-docker compose build backend
-docker compose up -d backend
-```
 
 ## Run the Frontend Locally
 
