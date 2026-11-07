@@ -254,3 +254,61 @@ func (h *OrderHandler) GetOrderByID(w http.ResponseWriter, r *http.Request) {
         result,
     )
 }
+
+func (h *OrderHandler) GetOrders(
+    w http.ResponseWriter,
+    r *http.Request,
+) {
+    query := r.URL.Query()
+
+    page := 1
+    limit := 10
+
+    if value := query.Get("page"); value != "" {
+        parsed, err := strconv.Atoi(value)
+        if err != nil || parsed < 1 {
+            writeError(
+                w,
+                http.StatusBadRequest,
+                "Invalid page",
+                "INVALID_PAGE",
+            )
+            return
+        }
+        page = parsed
+    }
+
+    if value := query.Get("limit"); value != "" {
+        parsed, err := strconv.Atoi(value)
+        if err != nil || parsed < 1 || parsed > 100 {
+            writeError(
+                w,
+                http.StatusBadRequest,
+                "Limit must be between 1 and 100",
+                "INVALID_LIMIT",
+            )
+            return
+        }
+        limit = parsed
+    }
+
+    result, err := h.service.GetOrders(r.Context(), page, limit)
+    if err != nil {
+        writeError(
+            w,
+            http.StatusInternalServerError,
+            "Failed to retrieve orders",
+            "INTERNAL_SERVER_ERROR",
+        )
+        return
+    }
+
+	writeListResponse(
+		w,
+		"Orders retrieved successfully",
+		result.Data,
+		result.Page,
+		result.Limit,
+		result.Total,
+	)
+}

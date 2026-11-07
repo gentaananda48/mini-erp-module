@@ -58,6 +58,10 @@ func New(db *pgxpool.Pool) http.Handler {
 
 	// Orders
 	mux.HandleFunc(
+		"GET /api/orders",
+		orderHandler.GetOrders,
+	)
+	mux.HandleFunc(
 		"POST /api/orders", 
 		orderHandler.CreateOrder,
 	)

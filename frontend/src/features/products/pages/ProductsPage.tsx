@@ -89,8 +89,6 @@ export function ProductsPage({ onNavigateToOrders }: ProductsPageProps) {
       {!loading && error && (
         <div className="state-container error-state">
           <h3>Something went wrong</h3>
-          <p>{error}</p>
-
           <button type="button" className="primary-button" onClick={retry}>
             Retry
           </button>

@@ -25,3 +25,18 @@ type OrderItemResponse struct {
 	UnitPrice int64  `json:"unitPrice"`
 	Subtotal  int64  `json:"subtotal"`
 }
+
+type OrderListItemResponse struct {
+    ID        int64  `json:"id"`
+    Customer  string `json:"customer"`
+    Status    string `json:"status"`
+    Total     int64  `json:"total"`
+    CreatedAt string `json:"createdAt"`
+}
+
+type OrderListResponse struct {
+    Data  []OrderListItemResponse `json:"data"`
+    Page  int                    `json:"page"`
+    Limit int                    `json:"limit"`
+    Total int64                  `json:"total"`
+}

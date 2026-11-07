@@ -173,3 +173,34 @@ func (s *OrderService) GetOrderByID(
 
     return toOrderResponse(order), nil
 }
+
+func (s *OrderService) GetOrders(
+    ctx context.Context,
+    page int,
+    limit int,
+) (dto.OrderListResponse, error) {
+
+    orders, total, err := s.repo.GetOrders(ctx, page, limit)
+    if err != nil {
+        return dto.OrderListResponse{}, err
+    }
+
+    data := make([]dto.OrderListItemResponse, 0, len(orders))
+
+    for _, order := range orders {
+        data = append(data, dto.OrderListItemResponse{
+            ID:        order.ID,
+            Customer:  order.Customer,
+            Status:    order.Status,
+            Total:     order.Total,
+            CreatedAt: order.CreatedAt.Format("2006-01-02T15:04:05Z07:00"),
+        })
+    }
+
+    return dto.OrderListResponse{
+        Data:  data,
+        Page:  page,
+        Limit: limit,
+        Total: total,
+    }, nil
+}

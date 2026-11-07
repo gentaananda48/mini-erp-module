@@ -523,3 +523,63 @@ func (r *OrderRepository) GetOrderByID(
 
     return order, nil
 }
+
+func (r *OrderRepository) GetOrders(
+    ctx context.Context,
+    page int,
+    limit int,
+) ([]model.Order, int64, error) {
+    offset := (page - 1) * limit
+
+    var total int64
+
+    err := r.db.QueryRow(ctx, `
+        SELECT COUNT(*)
+        FROM sales_orders
+    `).Scan(&total)
+
+    if err != nil {
+        return nil, 0, err
+    }
+
+    rows, err := r.db.Query(ctx, `
+        SELECT
+            id,
+            customer,
+            status,
+            total,
+            created_at
+        FROM sales_orders
+        ORDER BY created_at DESC, id DESC
+        LIMIT $1 OFFSET $2
+    `, limit, offset)
+
+    if err != nil {
+        return nil, 0, err
+    }
+    defer rows.Close()
+
+    orders := make([]model.Order, 0)
+
+    for rows.Next() {
+        var order model.Order
+
+        if err := rows.Scan(
+            &order.ID,
+            &order.Customer,
+            &order.Status,
+            &order.Total,
+            &order.CreatedAt,
+        ); err != nil {
+            return nil, 0, err
+        }
+
+        orders = append(orders, order)
+    }
+
+    if err := rows.Err(); err != nil {
+        return nil, 0, err
+    }
+
+    return orders, total, nil
+}
