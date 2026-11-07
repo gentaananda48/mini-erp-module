@@ -166,11 +166,9 @@ For local development outside Docker, also install:
 ### 1. Clone the repository
 
 ```bash
-git clone <https://github.com/gentaananda48/mini-erp-module>
+git clone https://github.com/gentaananda48/mini-erp-module
 cd miniERPModule
 ```
-
-Replace `<https://github.com/gentaananda48/mini-erp-module>` with the actual Git repository URL.
 
 ### 2. Build and start the application
 
@@ -268,12 +266,6 @@ http://localhost:5173
 Make sure the Vite development proxy is configured to forward `/api`
 requests to the backend at `http://localhost:8080`. The exact proxy
 configuration is defined in `frontend/vite.config.ts`.
-
-To create a production build locally:
-
-```bash
-npm run build
-```
 
 To preview the production build using Vite:
 
