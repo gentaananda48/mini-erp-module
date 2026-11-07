@@ -166,11 +166,11 @@ For local development outside Docker, also install:
 ### 1. Clone the repository
 
 ```bash
-git clone <YOUR_REPOSITORY_URL>
+git clone <https://github.com/gentaananda48/mini-erp-module>
 cd miniERPModule
 ```
 
-Replace `<YOUR_REPOSITORY_URL>` with the actual Git repository URL.
+Replace `<https://github.com/gentaananda48/mini-erp-module>` with the actual Git repository URL.
 
 ### 2. Check the project files
 
