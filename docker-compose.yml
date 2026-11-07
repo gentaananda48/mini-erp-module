@@ -1,0 +1,86 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: mini-erp-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: mini_erp
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d mini_erp"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  migrate:
+    image: migrate/migrate:v4.19.0
+    container_name: mini-erp-migrate
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./backend/migrations:/migrations:ro
+    command:
+      - "-path=/migrations"
+      - "-database=postgres://postgres:secret@postgres:5432/mini_erp?sslmode=disable"
+      - "up"
+    restart: "no"
+
+  seeder:
+    image: postgres:17-alpine
+    container_name: mini-erp-seeder
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    environment:
+      PGPASSWORD: secret
+    volumes:
+      - ./backend/seeds:/seeds:ro
+    command:
+      - "sh"
+      - "-c"
+      - |
+        psql -h postgres -U postgres -d mini_erp -v ON_ERROR_STOP=1 -f /seeds/products.sql &&
+        psql -h postgres -U postgres -d mini_erp -v ON_ERROR_STOP=1 -f /seeds/stock_movements.sql &&
+        psql -h postgres -U postgres -d mini_erp -v ON_ERROR_STOP=1 -f /seeds/orders.sql
+    restart: "no"
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: DockerFile
+    container_name: mini-erp-backend
+    restart: unless-stopped
+    depends_on:
+      seeder:
+        condition: service_completed_successfully
+    environment:
+      APP_PORT: 8080
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: secret
+      DB_NAME: mini_erp
+      DB_SSLMODE: disable
+    ports:
+      - "8080:8080"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: mini-erp-frontend
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_started
+    ports:
+      - "3000:80"
+
+volumes:
+  postgres_data:
