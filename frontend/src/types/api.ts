@@ -36,3 +36,34 @@ export interface StockMovement {
   available: number;
   createdAt: string;
 }
+
+export interface CreateOrderItemPayload {
+  sku: string;
+  qty: number;
+}
+
+export interface CreateOrderPayload {
+  customer: string;
+  items: CreateOrderItemPayload[];
+}
+
+export interface OrderItem {
+  sku: string;
+  qty: number;
+  unitPrice: number;
+  subtotal: number;
+}
+
+export interface Order {
+  id: number;
+  customer: string;
+  status: string;
+  total: number;
+  items: OrderItem[];
+  createdAt: string;
+}
+
+export interface CancelOrderResponse {
+  id: number;
+  status: string;
+}
