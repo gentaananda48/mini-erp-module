@@ -7,13 +7,11 @@ movements, and customer orders.
 
 - [Overview](#overview)
 - [Technology Stack](#technology-stack)
-- [Application Architecture](#application-architecture)
 - [Project Structure](#project-structure)
 - [Features](#features)
 - [Prerequisites](#prerequisites)
 - [Run the Application with Docker](#run-the-application-with-docker)
 - [Access the Application](#access-the-application)
-- [Useful Docker Commands](#useful-docker-commands)
 - [Run the Frontend Locally](#run-the-frontend-locally)
 - [Run the Backend Locally](#run-the-backend-locally)
 - [API Overview](#api-overview)
